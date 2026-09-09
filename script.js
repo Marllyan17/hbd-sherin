@@ -2,11 +2,11 @@
    SUPABASE CONFIGURATION
    ============================================================ */
 // Gunakan Supabase Project URL
-const SUPABASE_URL = "YOUR_SUPABASE_URL";
+const SUPABASE_URL = "https://supabase.com/dashboard/project/bfiauhohztjnncserzyt";
 
 // Gunakan hanya public anon/publishable key.
 // JANGAN memasukkan service_role key ke frontend.
-const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJmaWF1aG9oenRqbm5jc2Vyenl0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg5NTU4MDIsImV4cCI6MjEwNDUzMTgwMn0.cpsRxbECqCXsPI1eqDkXAkUAf9WMtBDy-uWGkwX40Yc";
 
 let supabase = null;
 if (typeof window.supabase !== "undefined" && SUPABASE_URL !== "YOUR_SUPABASE_URL") {
