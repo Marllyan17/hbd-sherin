@@ -1,0 +1,706 @@
+/* ============================================================
+   UCAPAN ULANG TAHUN — SERINA RAHMADANI
+   Tema: merah crimson, terinspirasi Universitas Hasanuddin
+   ============================================================ */
+
+/* ---------- GANTI DI SINI: warna utama ---------- */
+:root {
+  --merah-gelap: #3a050c;      /* dasar gradient paling gelap */
+  --merah-tua: #6e0b16;        /* warna dominan */
+  --merah-crimson: #a3101d;    /* aksen tengah */
+  --merah-terang: #ff2e3d;     /* aksen terang / glow */
+  --putih: #faf5f2;
+  --abu-gelap: #1a1113;
+  --hitam: #100a0b;
+
+  --font-display: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+  --font-body: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+  --radius-lg: 22px;
+  --radius-md: 14px;
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  overflow-x: hidden;
+}
+
+body {
+  font-family: var(--font-body);
+  color: var(--putih);
+  background: var(--merah-gelap);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3 { font-family: var(--font-display); margin: 0; }
+p { margin: 0; }
+button { font-family: inherit; cursor: pointer; }
+
+/* ============================================================
+   BACKGROUND DECORATION — partikel, glow, ornamen
+   ============================================================ */
+.bg-decor {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse at 15% 20%, rgba(255, 46, 61, 0.16), transparent 55%),
+    radial-gradient(ellipse at 85% 75%, rgba(163, 16, 29, 0.22), transparent 55%),
+    linear-gradient(160deg, var(--merah-gelap) 0%, var(--merah-tua) 55%, var(--merah-gelap) 100%);
+}
+
+.particle {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.9), rgba(255, 90, 100, 0));
+  opacity: 0.5;
+  animation: floatUp linear infinite;
+}
+
+.particle.heart {
+  background: none;
+  opacity: 0.35;
+}
+
+.particle.heart::before {
+  content: "♥";
+  color: var(--merah-terang);
+  font-size: inherit;
+  line-height: 1;
+}
+
+@keyframes floatUp {
+  0%   { transform: translateY(0) translateX(0) scale(1); opacity: 0; }
+  10%  { opacity: 0.55; }
+  90%  { opacity: 0.35; }
+  100% { transform: translateY(-110vh) translateX(var(--drift, 20px)) scale(0.8); opacity: 0; }
+}
+
+/* ============================================================
+   TOMBOL — dipakai di semua halaman
+   ============================================================ */
+.btn {
+  border: none;
+  border-radius: 999px;
+  padding: 14px 30px;
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  transition: transform 0.35s var(--ease), box-shadow 0.35s var(--ease), background 0.35s var(--ease);
+  min-height: 48px;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--merah-terang), var(--merah-crimson));
+  color: var(--putih);
+  box-shadow: 0 10px 30px -10px rgba(255, 46, 61, 0.65);
+}
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 14px 34px -8px rgba(255, 46, 61, 0.8); }
+.btn-primary:active { transform: translateY(0); }
+
+.btn-outline {
+  background: transparent;
+  color: var(--putih);
+  border: 1.5px solid rgba(250, 245, 242, 0.55);
+}
+.btn-outline:hover { background: rgba(250, 245, 242, 0.1); border-color: var(--putih); transform: translateY(-2px); }
+
+.btn-outline-light { border-color: rgba(255, 255, 255, 0.4); }
+
+.btn-ghost {
+  background: transparent;
+  color: rgba(250, 245, 242, 0.75);
+  padding: 14px 20px;
+}
+.btn-ghost:hover { color: var(--putih); }
+.btn-ghost-light { color: rgba(255, 255, 255, 0.65); }
+
+/* ============================================================
+   HALAMAN PIN
+   ============================================================ */
+.pin-screen {
+  position: relative;
+  z-index: 2;
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.pin-card {
+  width: 100%;
+  max-width: 400px;
+  padding: 44px 30px;
+  border-radius: var(--radius-lg);
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  box-shadow: 0 25px 60px -20px rgba(0, 0, 0, 0.6), 0 0 40px -10px rgba(255, 46, 61, 0.25);
+  text-align: center;
+  animation: cardIn 0.9s var(--ease) both;
+}
+
+@keyframes cardIn {
+  from { opacity: 0; transform: translateY(18px) scale(0.98); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.pin-eyebrow {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: clamp(16px, 4vw, 19px);
+  color: rgba(250, 245, 242, 0.92);
+  margin-bottom: 18px;
+}
+
+.pin-lock-icon {
+  color: var(--merah-terang);
+  margin-bottom: 20px;
+  filter: drop-shadow(0 0 12px rgba(255, 46, 61, 0.55));
+}
+
+.pin-input-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 18px;
+}
+
+.pin-box {
+  width: 38px;
+  height: 48px;
+  text-align: center;
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--putih);
+  background: rgba(255, 255, 255, 0.07);
+  border: 1.5px solid rgba(255, 255, 255, 0.22);
+  border-radius: 10px;
+  outline: none;
+  transition: border-color 0.25s, box-shadow 0.25s;
+}
+
+.pin-box:focus {
+  border-color: var(--merah-terang);
+  box-shadow: 0 0 0 3px rgba(255, 46, 61, 0.25);
+}
+
+.pin-sep { color: rgba(250, 245, 242, 0.4); font-size: 18px; }
+
+.pin-message {
+  min-height: 20px;
+  font-size: 13px;
+  color: #ffb3b8;
+  margin-bottom: 16px;
+}
+
+.pin-card.shake { animation: shake 0.45s var(--ease); }
+@keyframes shake {
+  10%, 90% { transform: translateX(-3px); }
+  20%, 80% { transform: translateX(5px); }
+  30%, 50%, 70% { transform: translateX(-8px); }
+  40%, 60% { transform: translateX(8px); }
+}
+
+.pin-screen.unlocking { animation: pinFadeOut 0.7s var(--ease) forwards; }
+@keyframes pinFadeOut {
+  to { opacity: 0; filter: blur(6px); transform: scale(1.02); }
+}
+
+/* ============================================================
+   WADAH SLIDE
+   ============================================================ */
+.slide-wrapper {
+  position: relative;
+  z-index: 1;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+}
+
+.slide {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 96px 24px 116px;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(24px) scale(0.985);
+  filter: blur(6px);
+  transition: opacity 0.7s var(--ease), transform 0.7s var(--ease), filter 0.7s var(--ease), visibility 0s linear 0.7s;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.slide.active {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0) scale(1);
+  filter: blur(0);
+  transition: opacity 0.7s var(--ease), transform 0.7s var(--ease), filter 0.7s var(--ease);
+}
+
+.slide.exit-left { transform: translateY(0) translateX(-30px) scale(0.98); }
+.slide.exit-right { transform: translateY(0) translateX(30px) scale(0.98); }
+
+.slide-dark {
+  background: radial-gradient(ellipse at 50% 0%, rgba(163, 16, 29, 0.35), transparent 60%), var(--hitam);
+}
+
+.slide-inner {
+  width: 100%;
+  max-width: 1080px;
+  flex-shrink: 0;
+  /* margin atas/bawah auto membuat konten tetap center kalau muat di layar,
+     tapi otomatis "menyusut ke 0" (bukan nge-clip) kalau kontennya lebih
+     tinggi dari layar — ini yang memperbaiki bug konten ketutupan tombol
+     musik/indikator di bagian atas saat slide panjang (misalnya slide doa). */
+  margin: auto 0;
+}
+
+.slide-title {
+  font-family: var(--font-display);
+  font-size: clamp(28px, 5vw, 42px);
+  font-weight: 600;
+  line-height: 1.25;
+  text-align: center;
+  margin-bottom: 12px;
+}
+
+.slide-title-light { color: var(--putih); }
+
+/* progress + dot nav */
+.progress-indicator {
+  position: fixed;
+  top: 20px;
+  right: 24px;
+  z-index: 5;
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  color: rgba(250, 245, 242, 0.75);
+  padding: 9px 16px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+/* scrim tipis di atas & bawah layar supaya teks yang di-scroll tidak
+   "bentrok" langsung dengan tombol musik / indikator / dot-nav */
+.slide-wrapper::before,
+.slide-wrapper::after {
+  content: "";
+  position: fixed;
+  left: 0;
+  right: 0;
+  z-index: 4;
+  pointer-events: none;
+}
+.slide-wrapper::before {
+  top: 0;
+  height: 88px;
+  background: linear-gradient(to bottom, rgba(16, 10, 11, 0.55), transparent);
+}
+.slide-wrapper::after {
+  bottom: 0;
+  height: 96px;
+  background: linear-gradient(to top, rgba(16, 10, 11, 0.55), transparent);
+}
+
+.dot-nav {
+  position: fixed;
+  bottom: 22px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 5;
+  display: flex;
+  gap: 10px;
+  padding: 10px 14px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.dot {
+  width: 22px;
+  height: 22px;
+  min-height: unset;
+  padding: 0;
+  border-radius: 50%;
+  background: transparent;
+  border: none;
+  position: relative;
+}
+.dot::after {
+  content: "";
+  position: absolute;
+  inset: 8px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.35);
+  transition: inset 0.3s var(--ease), background 0.3s var(--ease);
+}
+.dot.active::after {
+  inset: 6px;
+  background: var(--merah-terang);
+  box-shadow: 0 0 10px rgba(255, 46, 61, 0.8);
+}
+
+.music-toggle {
+  position: fixed;
+  top: 20px;
+  left: 24px;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 16px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  color: var(--putih);
+  font-size: 13px;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  min-height: 40px;
+}
+.music-toggle.playing .music-icon { animation: pulseNote 1s ease-in-out infinite; }
+@keyframes pulseNote { 50% { transform: scale(1.25); } }
+
+.slide-nav-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+  margin-top: 36px;
+  flex-wrap: wrap;
+}
+
+/* ============================================================
+   SLIDE 1 — HERO
+   ============================================================ */
+.slide1-inner {
+  display: grid;
+  grid-template-columns: 0.85fr 1.15fr;
+  gap: 56px;
+  align-items: center;
+}
+
+.photo-frame {
+  position: relative;
+  width: 100%;
+  max-width: 320px;
+  aspect-ratio: 4 / 5;
+  margin: 0 auto;
+  border-radius: 8px;
+  background: linear-gradient(160deg, #fff, #f2e9e6);
+  padding: 14px 14px 46px;
+  transform: rotate(-8deg);
+  box-shadow:
+    0 30px 60px -18px rgba(0, 0, 0, 0.55),
+    0 0 55px -12px rgba(255, 46, 61, 0.4);
+  transition: transform 0.5s var(--ease);
+}
+.photo-frame:hover { transform: rotate(-4deg) scale(1.02); }
+
+.photo-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 3px;
+  display: block;
+  background: #e9dedb;
+}
+
+.photo-placeholder-text {
+  display: none;
+  position: absolute;
+  inset: 14px 14px 46px;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: #9a8f8c;
+  background: repeating-linear-gradient(135deg, #efe6e3, #efe6e3 10px, #e6dbd7 10px, #e6dbd7 20px);
+  border-radius: 3px;
+  padding: 12px;
+}
+/* Jika foto asli belum ada / gagal dimuat, tampilkan placeholder yang rapi */
+.photo-frame.photo-fallback .photo-img { display: none; }
+.photo-frame.photo-fallback .photo-placeholder-text { display: flex; }
+
+.slide1-text { text-align: left; }
+
+.hb-eyebrow {
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  color: rgba(250, 245, 242, 0.6);
+  margin-bottom: 10px;
+}
+
+.hb-title {
+  font-size: clamp(32px, 6vw, 54px);
+  line-height: 1.12;
+  font-weight: 600;
+  margin-bottom: 22px;
+}
+
+.hb-name {
+  font-style: italic;
+  background: linear-gradient(100deg, var(--putih), #ffc9ce, var(--merah-terang));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.hb-message { max-width: 52ch; }
+.hb-message p {
+  font-size: 16px;
+  line-height: 1.75;
+  color: rgba(250, 245, 242, 0.88);
+  margin-bottom: 16px;
+}
+
+.next-btn { margin-top: 26px; }
+
+/* ============================================================
+   SLIDE 2 — PENCAPAIAN
+   ============================================================ */
+.journey-tag {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  color: rgba(250, 245, 242, 0.55);
+  margin-bottom: 40px;
+}
+.journey-arrow { color: var(--merah-terang); }
+
+.achievements {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 22px;
+}
+
+.achievement-card {
+  position: relative;
+  padding: 30px 24px;
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.055);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: 0 20px 40px -22px rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  transform: translateY(26px);
+  transition: transform 0.45s var(--ease), box-shadow 0.35s var(--ease), border-color 0.35s var(--ease);
+}
+.achievement-card.revealed { opacity: 1; transform: translateY(0); animation: cardReveal 0.7s var(--ease) both; }
+@keyframes cardReveal {
+  from { opacity: 0; transform: translateY(26px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.achievement-card:hover {
+  border-color: rgba(255, 46, 61, 0.45);
+  box-shadow: 0 24px 48px -20px rgba(163, 16, 29, 0.55);
+}
+
+.achievement-number {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 34px;
+  color: var(--merah-terang);
+  opacity: 0.85;
+  margin-bottom: 10px;
+}
+
+.achievement-label {
+  font-size: 12px;
+  letter-spacing: 0.05em;
+  color: rgba(250, 245, 242, 0.55);
+  margin-bottom: 6px;
+}
+
+.achievement-title {
+  font-size: 19px;
+  font-weight: 500;
+  margin-bottom: 12px;
+  line-height: 1.35;
+}
+
+.achievement-desc {
+  font-size: 14px;
+  line-height: 1.65;
+  color: rgba(250, 245, 242, 0.78);
+}
+
+/* ============================================================
+   SLIDE 3 — DOA
+   ============================================================ */
+.slide3-inner { text-align: center; }
+
+.prayer-list {
+  list-style: none;
+  margin: 0 auto 30px;
+  padding: 0;
+  max-width: 620px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.prayer-item {
+  font-size: clamp(15px, 2.4vw, 17px);
+  line-height: 1.6;
+  color: rgba(250, 245, 242, 0.5);
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity 0.7s var(--ease), transform 0.7s var(--ease), color 0.5s;
+}
+.prayer-item.shown {
+  opacity: 1;
+  transform: translateY(0);
+  color: rgba(250, 245, 242, 0.92);
+}
+
+.prayer-closing {
+  max-width: 560px;
+  margin: 18px auto 0;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: clamp(17px, 3vw, 21px);
+  line-height: 1.6;
+  color: var(--putih);
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity 0.9s var(--ease), transform 0.9s var(--ease);
+}
+.prayer-closing.shown { opacity: 1; transform: translateY(0); }
+
+/* ============================================================
+   SLIDE 4 — PESAN TERAKHIR
+   ============================================================ */
+.slide4-inner {
+  max-width: 640px;
+  text-align: center;
+  margin: 0 auto;
+}
+
+.final-title {
+  font-size: clamp(26px, 5vw, 38px);
+  line-height: 1.3;
+  margin-bottom: 28px;
+}
+
+.final-message p {
+  font-size: 15.5px;
+  line-height: 1.8;
+  color: rgba(250, 245, 242, 0.85);
+  margin-bottom: 18px;
+}
+
+.final-quote {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: clamp(18px, 3vw, 22px) !important;
+  color: var(--putih) !important;
+  margin-top: 26px !important;
+  padding-top: 22px;
+  border-top: 1px solid rgba(255, 255, 255, 0.14);
+}
+
+.final-closing {
+  margin: 34px 0 30px;
+  padding-top: 26px;
+  border-top: 1px solid rgba(255, 46, 61, 0.25);
+}
+
+.final-closing-main {
+  font-family: var(--font-display);
+  font-size: clamp(22px, 4vw, 28px);
+  font-weight: 600;
+  margin-bottom: 14px;
+}
+
+.final-closing-sub {
+  font-size: 15px;
+  line-height: 1.7;
+  color: rgba(250, 245, 242, 0.8);
+  margin-bottom: 20px;
+}
+
+.final-signature {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 18px;
+  color: var(--merah-terang);
+}
+
+.slide4-inner > .btn-ghost { margin-top: 10px; }
+
+/* ============================================================
+   TABLET
+   ============================================================ */
+@media (max-width: 900px) {
+  .slide1-inner { grid-template-columns: 1fr; gap: 32px; text-align: center; }
+  .slide1-text { text-align: center; }
+  .hb-message { margin: 0 auto; }
+  .achievements { grid-template-columns: 1fr; gap: 16px; }
+  .photo-frame { max-width: 260px; }
+}
+
+/* ============================================================
+   MOBILE
+   ============================================================ */
+@media (max-width: 560px) {
+  .slide { padding: 84px 18px 100px; }
+  .pin-box { width: 32px; height: 44px; font-size: 18px; }
+  .pin-card { padding: 34px 20px; }
+  .photo-frame { max-width: 220px; padding: 10px 10px 36px; transform: rotate(-6deg); }
+  .music-toggle { padding: 8px 12px; font-size: 0; gap: 0; }
+  .music-toggle .music-icon { font-size: 15px; }
+  .music-label { display: none; }
+  .progress-indicator { top: 20px; right: 18px; font-size: 12px; }
+  .dot-nav { bottom: 16px; padding: 8px 12px; gap: 8px; }
+  .dot { width: 18px; height: 18px; }
+  .slide-nav-buttons { gap: 10px; }
+  .btn { padding: 13px 22px; font-size: 14px; }
+}
+
+@media (max-width: 360px) {
+  .pin-input-row { gap: 5px; }
+  .pin-box { width: 28px; }
+}
+
+/* ============================================================
+   AKSESIBILITAS
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+:focus-visible {
+  outline: 2px solid var(--merah-terang);
+  outline-offset: 3px;
+}
