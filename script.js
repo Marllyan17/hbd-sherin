@@ -1,220 +1,322 @@
 /* ============================================================
-   UCAPAN ULANG TAHUN — SERINA RAHMADANI
-   script.js — logika PIN, navigasi slide, dan interaksi kecil
+   SUPABASE CONFIGURATION
    ============================================================ */
+// Gunakan Supabase Project URL
+const SUPABASE_URL = "YOUR_SUPABASE_URL";
 
-document.addEventListener('DOMContentLoaded', () => {
+// Gunakan hanya public anon/publishable key.
+// JANGAN memasukkan service_role key ke frontend.
+const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";
 
-  /* ---------- GANTI DI SINI: kode PIN ---------- */
-  const CORRECT_PIN = '100907'; // format tampilan: 10-09-07
+let supabase = null;
+if (typeof window.supabase !== "undefined" && SUPABASE_URL !== "YOUR_SUPABASE_URL") {
+  supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+}
 
+document.addEventListener("DOMContentLoaded", () => {
   /* ============================================================
-     1. PARTIKEL LATAR BELAKANG
+     1. PIN CONFIGURATION & LOCK LOGIC
      ============================================================ */
-  function buildParticles() {
-    const container = document.getElementById('bgDecor');
-    if (!container) return;
+  const MAIN_PINS = ["100907", "100907"]; // 10-09-07 / 100907
+  const SECRET_PINS = ["070405", "070405"]; // 07-04-05 / 070405
 
-    const isSmall = window.innerWidth < 560;
-    const count = isSmall ? 14 : 26;
-    const heartRatio = 0.25; // sebagian kecil partikel berbentuk hati
+  const pinScreen = document.getElementById("pinScreen");
+  const pinCard = document.getElementById("pinCard");
+  const pinBoxes = Array.from(document.querySelectorAll(".pin-box"));
+  const pinMessage = document.getElementById("pinMessage");
+  const pinSubmit = document.getElementById("pinSubmit");
+  const slideWrapper = document.getElementById("slideWrapper");
+  const secretRoom = document.getElementById("secretRoom");
 
-    for (let i = 0; i < count; i++) {
-      const el = document.createElement('span');
-      const isHeart = Math.random() < heartRatio;
-      el.className = 'particle' + (isHeart ? ' heart' : '');
-
-      const size = isHeart ? (10 + Math.random() * 10) : (2 + Math.random() * 4);
-      el.style.left = Math.random() * 100 + '%';
-      el.style.bottom = -(20 + Math.random() * 40) + 'px';
-      el.style.width = size + 'px';
-      el.style.height = size + 'px';
-      el.style.fontSize = size + 'px';
-      el.style.setProperty('--drift', (Math.random() * 60 - 30) + 'px');
-
-      const duration = 14 + Math.random() * 16;
-      const delay = Math.random() * 18;
-      el.style.animationDuration = duration + 's';
-      el.style.animationDelay = '-' + delay + 's';
-
-      container.appendChild(el);
-    }
-  }
-  buildParticles();
-
-  /* ============================================================
-     2. PIN LOCK
-     ============================================================ */
-  const pinScreen = document.getElementById('pinScreen');
-  const pinCard = pinScreen.querySelector('.pin-card');
-  const pinBoxes = Array.from(document.querySelectorAll('.pin-box'));
-  const pinMessage = document.getElementById('pinMessage');
-  const pinSubmit = document.getElementById('pinSubmit');
-  const slideWrapper = document.getElementById('slideWrapper');
-
-  // auto-lompat ke kotak berikutnya saat mengetik
-  pinBoxes.forEach((box, i) => {
-    box.addEventListener('input', () => {
-      box.value = box.value.replace(/[^0-9]/g, '').slice(0, 1);
-      if (box.value && i < pinBoxes.length - 1) {
-        pinBoxes[i + 1].focus();
+  // Handle Input Auto Focus
+  pinBoxes.forEach((box, index) => {
+    box.addEventListener("input", () => {
+      box.value = box.value.replace(/[^0-9]/g, "").slice(0, 1);
+      if (box.value && index < pinBoxes.length - 1) {
+        pinBoxes[index + 1].focus();
       }
     });
 
-    box.addEventListener('keydown', (e) => {
-      if (e.key === 'Backspace' && !box.value && i > 0) {
-        pinBoxes[i - 1].focus();
+    box.addEventListener("keydown", (e) => {
+      if (e.key === "Backspace" && !box.value && index > 0) {
+        pinBoxes[index - 1].focus();
       }
-      if (e.key === 'Enter') {
-        checkPin();
+      if (e.key === "Enter") {
+        verifyPin();
       }
     });
   });
 
-  pinSubmit.addEventListener('click', checkPin);
+  pinSubmit.addEventListener("click", verifyPin);
 
-  function checkPin() {
-    const entered = pinBoxes.map((b) => b.value).join('');
+  function verifyPin() {
+    const rawPin = pinBoxes.map((b) => b.value).join("");
 
-    if (entered.length < 6) {
-      showPinError('Isi dulu semua kotaknya ya.');
+    if (rawPin.length < 6) {
+      showPinError("Hmm... PIN-nya belum tepat.");
       return;
     }
 
-    if (entered === CORRECT_PIN) {
-      unlockWebsite();
+    if (MAIN_PINS.includes(rawPin)) {
+      unlockMainWebsite();
+    } else if (SECRET_PINS.includes(rawPin)) {
+      unlockSecretRoom();
     } else {
-      showPinError('Hmm, sepertinya PIN-nya belum tepat.');
+      showPinError("Hmm... PIN-nya belum tepat.");
     }
   }
 
-  function showPinError(text) {
-    pinMessage.textContent = text;
-    pinCard.classList.remove('shake');
-    // paksa reflow supaya animasi bisa diulang
-    void pinCard.offsetWidth;
-    pinCard.classList.add('shake');
-    pinBoxes.forEach((b) => (b.value = ''));
+  function showPinError(msg) {
+    pinMessage.textContent = msg;
+    pinCard.classList.remove("shake");
+    void pinCard.offsetWidth; // Force Reflow
+    pinCard.classList.add("shake");
+    pinBoxes.forEach((b) => (b.value = ""));
     pinBoxes[0].focus();
   }
 
-  function unlockWebsite() {
-    pinMessage.textContent = '';
-    pinScreen.classList.add('unlocking');
+  function unlockMainWebsite() {
+    pinScreen.style.transition = "opacity 0.6s ease";
+    pinScreen.style.opacity = "0";
     setTimeout(() => {
-      pinScreen.style.display = 'none';
+      pinScreen.style.display = "none";
       slideWrapper.hidden = false;
-      goToSlide(1, 'init');
-    }, 650);
+      playMainAudio();
+    }, 600);
+  }
+
+  function unlockSecretRoom() {
+    pinScreen.style.transition = "opacity 0.8s ease";
+    pinScreen.style.opacity = "0";
+    setTimeout(() => {
+      pinScreen.style.display = "none";
+      secretRoom.hidden = false;
+      playSecretAudio();
+      checkExistingMessage();
+    }, 800);
   }
 
   /* ============================================================
-     3. NAVIGASI SLIDE
+     2. AUDIO CONTROLLER (SINGLE ACTIVE AUDIO GUARANTEE)
      ============================================================ */
-  const slides = Array.from(document.querySelectorAll('.slide'));
-  const dots = Array.from(document.querySelectorAll('.dot'));
-  const progressCounter = document.getElementById('progressCounter');
-  let currentSlide = 1;
-  const totalSlides = slides.length;
+  const audioBirthday = document.getElementById("audioBirthday");
+  const audioKeluhan = document.getElementById("audioKeluhan");
+  const musicToggleMain = document.getElementById("musicToggleMain");
+  const musicToggleSecret = document.getElementById("musicToggleSecret");
 
-  function goToSlide(target, direction) {
-    if (target < 1 || target > totalSlides) return;
-
-    const exitClass = direction === 'next' ? 'exit-left' : 'exit-right';
-
-    slides.forEach((s) => {
-      const num = Number(s.dataset.slide);
-      if (num === target) {
-        s.classList.add('active');
-        s.classList.remove('exit-left', 'exit-right');
-      } else {
-        s.classList.remove('active');
-        if (direction && direction !== 'init') s.classList.add(exitClass);
-      }
-    });
-
-    dots.forEach((d) => {
-      d.classList.toggle('active', Number(d.dataset.goto) === target);
-    });
-
-    progressCounter.textContent = String(target).padStart(2, '0') + ' / ' + String(totalSlides).padStart(2, '0');
-
-    currentSlide = target;
-
-    if (target === 2) revealAchievements();
-    if (target === 3) revealPrayers();
+  function stopAllAudio() {
+    audioBirthday.pause();
+    audioBirthday.currentTime = 0;
+    audioKeluhan.pause();
+    audioKeluhan.currentTime = 0;
   }
 
-  document.querySelectorAll('[data-next]').forEach((btn) => {
-    btn.addEventListener('click', () => goToSlide(currentSlide + 1, 'next'));
-  });
-  document.querySelectorAll('[data-prev]').forEach((btn) => {
-    btn.addEventListener('click', () => goToSlide(currentSlide - 1, 'prev'));
-  });
-  dots.forEach((dot) => {
-    dot.addEventListener('click', () => {
-      const target = Number(dot.dataset.goto);
-      goToSlide(target, target > currentSlide ? 'next' : 'prev');
-    });
-  });
-
-  // navigasi keyboard: panah kiri/kanan, mempermudah preview di desktop
-  document.addEventListener('keydown', (e) => {
-    if (slideWrapper.hidden) return;
-    if (e.key === 'ArrowRight') goToSlide(currentSlide + 1, 'next');
-    if (e.key === 'ArrowLeft') goToSlide(currentSlide - 1, 'prev');
-  });
-
-  /* ============================================================
-     4. REVEAL ACHIEVEMENT CARD (slide 2)
-     ============================================================ */
-  let achievementsRevealed = false;
-  function revealAchievements() {
-    if (achievementsRevealed) return;
-    achievementsRevealed = true;
-
-    const cards = document.querySelectorAll('.achievement-card');
-    cards.forEach((card, i) => {
-      setTimeout(() => card.classList.add('revealed'), 160 * i);
+  function playMainAudio() {
+    stopAllAudio();
+    audioBirthday.play().catch(() => {
+      // Browser Autoplay blocked
     });
   }
 
-  /* ============================================================
-     5. REVEAL DOA SATU PER SATU (slide 3)
-     ============================================================ */
-  let prayersRevealed = false;
-  function revealPrayers() {
-    if (prayersRevealed) return;
-    prayersRevealed = true;
-
-    const items = document.querySelectorAll('.prayer-item');
-    const closing = document.getElementById('prayerClosing');
-
-    items.forEach((item, i) => {
-      setTimeout(() => item.classList.add('shown'), 260 * i);
+  function playSecretAudio() {
+    stopAllAudio();
+    audioKeluhan.play().catch(() => {
+      // Browser Autoplay blocked
     });
-
-    setTimeout(() => closing.classList.add('shown'), 260 * items.length + 300);
   }
 
-  /* ============================================================
-     6. MUSIK LATAR (opsional, tidak autoplay)
-     ============================================================ */
-  const musicToggle = document.getElementById('musicToggle');
-  const bgAudio = document.getElementById('bgAudio');
-
-  musicToggle.addEventListener('click', () => {
-    if (bgAudio.paused) {
-      bgAudio.play().catch(() => {
-        // file audio/birthday.mp3 belum tersedia, abaikan dengan tenang
-      });
-      musicToggle.classList.add('playing');
+  musicToggleMain.addEventListener("click", () => {
+    if (audioBirthday.paused) {
+      playMainAudio();
     } else {
-      bgAudio.pause();
-      musicToggle.classList.remove('playing');
+      audioBirthday.pause();
     }
   });
 
-  // fokus otomatis ke kotak PIN pertama saat halaman dibuka
+  musicToggleSecret.addEventListener("click", () => {
+    if (audioKeluhan.paused) {
+      playSecretAudio();
+    } else {
+      audioKeluhan.pause();
+    }
+  });
+
+  /* ============================================================
+     3. MAIN SLIDE NAVIGATION
+     ============================================================ */
+  const slides = Array.from(document.querySelectorAll(".slide"));
+  const dots = Array.from(document.querySelectorAll(".dot"));
+  const progressCounter = document.getElementById("progressCounter");
+  let currentSlide = 1;
+
+  function goToSlide(targetIndex) {
+    if (targetIndex < 1 || targetIndex > slides.length) return;
+
+    slides.forEach((s) => s.classList.remove("active"));
+    dots.forEach((d) => d.classList.remove("active"));
+
+    const nextSlide = document.getElementById(`slide${targetIndex}`);
+    if (nextSlide) nextSlide.classList.add("active");
+
+    if (dots[targetIndex - 1]) dots[targetIndex - 1].classList.add("active");
+
+    progressCounter.textContent = `0${targetIndex} / 0${slides.length}`;
+    currentSlide = targetIndex;
+  }
+
+  document.querySelectorAll("[data-next]").forEach((btn) => {
+    btn.addEventListener("click", () => goToSlide(currentSlide + 1));
+  });
+
+  document.querySelectorAll("[data-prev]").forEach((btn) => {
+    btn.addEventListener("click", () => goToSlide(currentSlide - 1));
+  });
+
+  dots.forEach((dot) => {
+    dot.addEventListener("click", () => {
+      const goto = parseInt(dot.dataset.goto, 10);
+      goToSlide(goto);
+    });
+  });
+
+  /* ============================================================
+     4. EXIT SECRET ROOM
+     ============================================================ */
+  const btnExitSecret = document.getElementById("btnExitSecret");
+  btnExitSecret.addEventListener("click", () => {
+    stopAllAudio();
+    secretRoom.hidden = true;
+    pinScreen.style.display = "flex";
+    pinScreen.style.opacity = "1";
+    pinBoxes.forEach((b) => (b.value = ""));
+    pinMessage.textContent = "";
+    pinBoxes[0].focus();
+  });
+
+  /* ============================================================
+     5. SECRET MESSAGE & SUPABASE SINGLE-MESSAGE PERSISTENCE
+     ============================================================ */
+  const secretForm = document.getElementById("secretForm");
+  const secretInput = document.getElementById("secretInput");
+  const charCounter = document.getElementById("charCounter");
+  const btnSubmitSecret = document.getElementById("btnSubmitSecret");
+  const formStatus = document.getElementById("formStatus");
+  const savedMessageDisplay = document.getElementById("savedMessageDisplay");
+  const savedMessageText = document.getElementById("savedMessageText");
+
+  // Counter Realtime
+  secretInput.addEventListener("input", () => {
+    charCounter.textContent = `${secretInput.value.length} / 1000`;
+  });
+
+  // Check Database / LocalStorage on Init
+  async function checkExistingMessage() {
+    let existingMsg = null;
+
+    if (supabase) {
+      try {
+        const { data, error } = await supabase
+          .from("birthday_message")
+          .select("message")
+          .limit(1)
+          .maybeSingle();
+
+        if (data && data.message) {
+          existingMsg = data.message;
+        }
+      } catch (err) {
+        console.error("Supabase fetch error:", err);
+      }
+    }
+
+    // Fallback to LocalStorage
+    if (!existingMsg) {
+      existingMsg = localStorage.getItem("serina_secret_message");
+    }
+
+    if (existingMsg) {
+      renderSavedMessage(existingMsg);
+    }
+  }
+
+  // Handle Submit Pesan
+  secretForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const message = secretInput.value.trim();
+
+    if (!message) return;
+
+    btnSubmitSecret.disabled = true;
+    btnSubmitSecret.textContent = "Mengirim...";
+    formStatus.textContent = "";
+
+    let success = false;
+
+    // 1. Simpan ke Supabase jika tersedia
+    if (supabase) {
+      try {
+        const { error } = await supabase
+          .from("birthday_message")
+          .insert([{ message: message }]);
+
+        if (!error) {
+          success = true;
+        } else {
+          console.error("Supabase error:", error);
+        }
+      } catch (err) {
+        console.error("Submit exception:", err);
+      }
+    }
+
+    // Fallback LocalStorage jika Supabase belum disetup
+    if (!success) {
+      localStorage.setItem("serina_secret_message", message);
+      success = true;
+    }
+
+    if (success) {
+      renderSavedMessage(message);
+    } else {
+      btnSubmitSecret.disabled = false;
+      btnSubmitSecret.textContent = "Kirim Pesan";
+      formStatus.textContent = "Sepertinya pesanmu belum berhasil dikirim. Coba lagi sebentar.";
+    }
+  });
+
+  // Fungsi Render & Hapus Input Form Sempurna (Keamanan TextContent)
+  function renderSavedMessage(msgText) {
+    // Completely Hide/Remove Input Elements
+    secretForm.style.display = "none";
+    document.querySelector(".secret-prompt").style.display = "none";
+
+    // Display Saved Message Safely via textContent
+    savedMessageText.textContent = msgText;
+    savedMessageDisplay.hidden = false;
+  }
+
+  /* ============================================================
+     6. BACKGROUND PARTICLES
+     ============================================================ */
+  function createParticles() {
+    const bgDecor = document.getElementById("bgDecor");
+    const count = window.innerWidth < 600 ? 15 : 30;
+
+    for (let i = 0; i < count; i++) {
+      const p = document.createElement("div");
+      p.className = "particle";
+      const size = Math.random() * 4 + 2;
+      p.style.width = `${size}px`;
+      p.style.height = `${size}px`;
+      p.style.left = `${Math.random() * 100}%`;
+      p.style.bottom = `-20px`;
+      p.style.setProperty("--drift", `${(Math.random() - 0.5) * 80}px`);
+      p.style.animationDuration = `${Math.random() * 12 + 8}s`;
+      p.style.animationDelay = `${Math.random() * 5}s`;
+      bgDecor.appendChild(p);
+    }
+  }
+
+  createParticles();
   pinBoxes[0].focus();
 });
