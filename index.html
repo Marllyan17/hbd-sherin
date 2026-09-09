@@ -1,205 +1,226 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, viewport-fit=cover">
-<title>Untuk Serina — 19</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Happy 19th Birthday, Serina!</title>
 
-<!-- Google Fonts (dengan fallback lokal jika offline, lihat style.css) -->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,500&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
 
-<link rel="stylesheet" href="style.css">
+  <!-- CSS -->
+  <link rel="stylesheet" href="style.css">
+
+  <!-- Supabase CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 
-<!-- ==================== BACKGROUND DECORATION ==================== -->
-<!-- Partikel dan cahaya dibuat lewat JS (lihat script.js) supaya jumlahnya bisa
-     menyesuaikan ukuran layar. Kontainer ini tinggal wadah kosong. -->
-<div class="bg-decor" id="bgDecor" aria-hidden="true"></div>
+  <!-- PARTIKEL LATAR BELAKANG -->
+  <div class="bg-decor" id="bgDecor" aria-hidden="true"></div>
 
-<!-- ==================== HALAMAN 1 — PIN LOCK ==================== -->
-<section id="pinScreen" class="pin-screen" aria-label="Halaman kunci PIN">
-  <div class="pin-card">
-    <p class="pin-eyebrow">Sebuah kejutan kecil untuk Serina</p>
+  <!-- AUDIO ELEMENTS -->
+  <audio id="audioBirthday" src="audio/birthday.mp3" loop preload="none"></audio>
+  <audio id="audioKeluhan" src="audio/keluhan.mp3" loop preload="none"></audio>
 
-    <div class="pin-lock-icon" aria-hidden="true">
-      <svg viewBox="0 0 48 48" width="34" height="34">
-        <path d="M12 22V16a12 12 0 0 1 24 0v6" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/>
-        <rect x="8" y="22" width="32" height="20" rx="5" fill="none" stroke="currentColor" stroke-width="2.6"/>
-        <circle cx="24" cy="31" r="2.6" fill="currentColor"/>
-      </svg>
-    </div>
+  <!-- ==================== PIN SCREEN ==================== -->
+  <section id="pinScreen" class="pin-screen">
+    <div class="pin-card" id="pinCard">
+      <h1 class="pin-title">Ada sesuatu untukmu.</h1>
+      <p class="pin-subtitle">Masukkan PIN untuk membuka pesan.</p>
 
-    <!-- 6 kotak PIN, format tampilan 10-09-07 -->
-    <div class="pin-input-row" id="pinInputRow">
-      <input type="text" inputmode="numeric" maxlength="1" class="pin-box" data-index="0" autocomplete="off">
-      <input type="text" inputmode="numeric" maxlength="1" class="pin-box" data-index="1" autocomplete="off">
-      <span class="pin-sep">-</span>
-      <input type="text" inputmode="numeric" maxlength="1" class="pin-box" data-index="2" autocomplete="off">
-      <input type="text" inputmode="numeric" maxlength="1" class="pin-box" data-index="3" autocomplete="off">
-      <span class="pin-sep">-</span>
-      <input type="text" inputmode="numeric" maxlength="1" class="pin-box" data-index="4" autocomplete="off">
-      <input type="text" inputmode="numeric" maxlength="1" class="pin-box" data-index="5" autocomplete="off">
-    </div>
-
-    <p class="pin-message" id="pinMessage" role="status"></p>
-
-    <button type="button" class="btn btn-primary" id="pinSubmit">Buka Pesannya</button>
-  </div>
-</section>
-
-<!-- ==================== WADAH SLIDE ==================== -->
-<main id="slideWrapper" class="slide-wrapper" hidden>
-
-  <!-- indikator posisi slide -->
-  <div class="progress-indicator" aria-hidden="true">
-    <span id="progressCounter">01 / 04</span>
-  </div>
-
-  <!-- tombol musik, opsional. Taruh file di audio/birthday.mp3 -->
-  <button type="button" class="music-toggle" id="musicToggle" aria-label="Putar atau jeda musik">
-    <span class="music-icon">♪</span><span class="music-label">Musik</span>
-  </button>
-
-  <audio id="bgAudio" src="audio/birthday.mp3" loop preload="none"></audio>
-
-  <!-- ---------- SLIDE 1 — HAPPY BIRTHDAY ---------- -->
-  <section class="slide" id="slide1" data-slide="1">
-    <div class="slide-inner slide1-inner">
-
-      <div class="photo-frame">
-        <!-- GANTI: ganti src di bawah dengan foto asli Serina (rasio 4:5) -->
-        <img src="images/serina.jpg" alt="Foto Serina Rahmadani" class="photo-img" onerror="this.parentElement.classList.add('photo-fallback')">
-        <div class="photo-placeholder-text">images/serina.jpg</div>
+      <div class="pin-input-row">
+        <input type="text" inputmode="numeric" maxlength="1" class="pin-box" autocomplete="off">
+        <input type="text" inputmode="numeric" maxlength="1" class="pin-box" autocomplete="off">
+        <span class="pin-sep">-</span>
+        <input type="text" inputmode="numeric" maxlength="1" class="pin-box" autocomplete="off">
+        <input type="text" inputmode="numeric" maxlength="1" class="pin-box" autocomplete="off">
+        <span class="pin-sep">-</span>
+        <input type="text" inputmode="numeric" maxlength="1" class="pin-box" autocomplete="off">
+        <input type="text" inputmode="numeric" maxlength="1" class="pin-box" autocomplete="off">
       </div>
 
-      <div class="slide1-text">
-        <p class="hb-eyebrow">10 September 2026</p>
-        <!-- GANTI: judul utama -->
-        <h1 class="hb-title">Happy 19th Birthday,<br><span class="hb-name">Serina Rahmadani.</span></h1>
+      <p class="pin-message" id="pinMessage" role="status"></p>
+      <button type="button" class="btn btn-primary" id="pinSubmit">Buka Pesan</button>
+    </div>
+  </section>
 
-        <!-- GANTI: paragraf ucapan personal -->
-        <div class="hb-message">
-          <p>Selamat ulang tahun yang ke-19, Serina. Hari ini bukan cuma soal umur yang bertambah, tapi soal semua jalan yang sudah kamu tempuh sampai bisa berdiri di titik ini.</p>
-          <p>Delapan belas tahun kemarin membawa banyak hal yang nggak selalu gampang: keputusan besar, malam-malam yang berat, dan usaha yang kadang cuma kamu sendiri yang tahu seberapa capeknya. Tapi kamu tetap jalan. Itu yang bikin hari ini pantas dirayakan.</p>
+  <!-- ==================== MAIN WEBSITE ==================== -->
+  <main id="slideWrapper" class="slide-wrapper" hidden>
+
+    <!-- UI Overlay Top -->
+    <div class="top-bar">
+      <button type="button" class="music-toggle" id="musicToggleMain" aria-label="Toggle Musik">
+        <span class="music-icon">♪</span> <span class="music-label">Musik</span>
+      </button>
+      <div class="progress-indicator" id="progressCounter">01 / 04</div>
+    </div>
+
+    <!-- SLIDE 1: BIRTHDAY -->
+    <section class="slide active" id="slide1" data-slide="1">
+      <div class="slide-inner slide1-inner">
+        <div class="photo-polaroid">
+          <img src="images/serina.jpg" alt="Serina Rahmadani" class="photo-img" onerror="this.parentElement.classList.add('photo-fallback')">
+          <div class="photo-placeholder-text">images/serina.jpg</div>
         </div>
 
-        <button type="button" class="btn btn-outline next-btn" data-next>Lanjut →</button>
+        <div class="slide1-text">
+          <p class="hb-date">10 September 2026</p>
+          <h1 class="hb-title">Happy 19th Birthday,<br><span class="hb-name">Serina Rahmadani</span></h1>
+          <div class="hb-message">
+            <p>Selamat ulang tahun yang ke-19, Serina.</p>
+            <p>Hari ini bukan cuma tentang bertambahnya umur, tapi juga tentang semua perjalanan yang sudah kamu lewati sampai sejauh ini.</p>
+            <p>Umur 18 mungkin sudah membawa banyak hal baru, banyak proses, banyak cerita, dan tentunya banyak hal yang membuat kamu tumbuh menjadi dirimu yang sekarang.</p>
+            <p>Semoga di langkah baru ini, kamu selalu dikelilingi kebaikan dan keberanian untuk terus mengejar apa yang kamu impikan.</p>
+          </div>
+          <button type="button" class="btn btn-primary next-btn" data-next>Lanjut →</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 2: PENCAPAIAN UMUR 18 -->
+    <section class="slide" id="slide2" data-slide="2">
+      <div class="slide-inner">
+        <h2 class="slide-title">Lihat sejauh apa kamu sudah melangkah.</h2>
+        <div class="achievements-grid">
+          <article class="achievement-card">
+            <span class="achievement-num">01</span>
+            <h3 class="achievement-title">Diterima di Universitas Hasanuddin</h3>
+            <p class="achievement-desc">Buah dari perjuangan, ketekunan, dan malam-malam panjang yang akhirnya terbayar tuntas dengan diterimanya di kampus impian.</p>
+          </article>
+
+          <article class="achievement-card">
+            <span class="achievement-num">02</span>
+            <h3 class="achievement-title">Mendapatkan Beasiswa KIP</h3>
+            <p class="achievement-desc">Sebuah kesempatan berharga dan bukti nyata dari kerja kerasmu yang mendapat kepercayaan serta dukungan penuh untuk pendidikan.</p>
+          </article>
+
+          <article class="achievement-card">
+            <span class="achievement-num">03</span>
+            <h3 class="achievement-title">Bertumbuh sebagai Mahasiswa</h3>
+            <p class="achievement-desc">Mulai beradaptasi dengan lingkungan perkuliahan, suasana baru, bertemu banyak orang baru, dan berkembang menjadi pribadi yang makin dewasa.</p>
+          </article>
+        </div>
+
+        <div class="slide-nav-buttons">
+          <button type="button" class="btn btn-ghost" data-prev>← Kembali</button>
+          <button type="button" class="btn btn-primary" data-next>Lanjut →</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 3: DOA UMUR 19 -->
+    <section class="slide slide-dark" id="slide3" data-slide="3">
+      <div class="slide-inner">
+        <h2 class="slide-title">Untuk langkahmu di umur 19...</h2>
+
+        <ul class="prayer-list">
+          <li class="prayer-item">Diperlancar dan diberi kesehatan dalam menjalani masa-masa perkuliahan.</li>
+          <li class="prayer-item">Diberi kemudahan dan kelapangan dada setiap kali menghadapi masalah.</li>
+          <li class="prayer-item">Selalu dipertemukan dengan orang-orang baik yang tulus mendukungmu.</li>
+          <li class="prayer-item">Diberikan kekuatan untuk bangkit dan belajar setiap kali menghadapi kegagalan.</li>
+          <li class="prayer-item">Tetap menjadi pribadi yang rendah hati dan hangat ketika mencapai keberhasilan.</li>
+          <li class="prayer-item">Semoga cita-cita serta impian kecil maupun besar satu per satu tercapai.</li>
+          <li class="prayer-item">Selalu dilimpahi kebahagiaan dan ketenangan hati di setiap langkahmu.</li>
+        </ul>
+
+        <p class="prayer-closing" id="prayerClosing">“Semoga apa pun yang kamu inginkan di umur 19 ini, satu per satu bisa menjadi kenyataan.”</p>
+
+        <div class="slide-nav-buttons">
+          <button type="button" class="btn btn-ghost" data-prev>← Kembali</button>
+          <button type="button" class="btn btn-primary" data-next>Lanjut →</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 4: PESAN DARI MARLLYAN -->
+    <section class="slide slide-dark" id="slide4" data-slide="4">
+      <div class="slide-inner slide4-inner">
+        <h2 class="final-title">Dan kalau suatu hari kamu merasa sendirian...</h2>
+
+        <div class="final-message">
+          <p>Aku mungkin nggak selalu tahu apa yang sedang kamu pikirkan, nggak selalu bisa membantu menyelesaikan semuanya, dan mungkin juga nggak selalu ada di setiap momen.</p>
+          <p>Tapi aku ingin kamu tahu kalau aku tetap mendukungmu.</p>
+          <p>Ketika kamu berhasil, aku ikut bangga. Ketika kamu sedang menghadapi masalah, aku tetap berharap kamu bisa melewatinya.</p>
+          <p>Aku nggak harus selalu berada di depanmu untuk mendukungmu. Kadang cukup dari belakang, melihat kamu terus berjalan dan berkembang, itu sudah membuatku ikut bahagia.</p>
+        </div>
+
+        <div class="final-closing">
+          <p class="final-closing-main">Selamat ulang tahun ke-19, Serina Rahmadani.</p>
+          <p class="final-closing-sub">Teruslah melangkah. Aku akan tetap menjadi salah satu orang yang ikut bangga melihatmu tumbuh.</p>
+          <p class="final-signature">— Marllyan Haria Yoangga</p>
+        </div>
+
+        <div class="slide-nav-buttons">
+          <button type="button" class="btn btn-ghost" data-prev>← Kembali</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Dot Navigation -->
+    <nav class="dot-nav" id="dotNav" aria-label="Navigasi slide">
+      <button type="button" class="dot active" data-goto="1" aria-label="Slide 1"></button>
+      <button type="button" class="dot" data-goto="2" aria-label="Slide 2"></button>
+      <button type="button" class="dot" data-goto="3" aria-label="Slide 3"></button>
+      <button type="button" class="dot" data-goto="4" aria-label="Slide 4"></button>
+    </nav>
+  </main>
+
+  <!-- ==================== SECRET ROOM ==================== -->
+  <section id="secretRoom" class="secret-room" hidden>
+    <div class="secret-vignette"></div>
+
+    <div class="secret-top-bar">
+      <button type="button" class="btn btn-ghost btn-sm" id="btnExitSecret">← Kembali</button>
+      <button type="button" class="music-toggle" id="musicToggleSecret">
+        <span class="music-icon">♪</span> <span class="music-label">Secret Audio</span>
+      </button>
+    </div>
+
+    <div class="secret-content">
+      <p class="secret-intro-tag">You found something that wasn't supposed to be here...</p>
+      <h1 class="secret-title">Selamat ulang tahun Sheriin ke-19 hehehe</h1>
+      <p class="secret-subtitle">Ini hidden game emang buat dirimu. Tapi ini isi curahan hati ku. Emang nggak mau baca boleh, kalau nggak tutup saja hehe.</p>
+
+      <div class="secret-text-body">
+        <p>Aku buat hidden game ini mungkin sebagai tempatku buat curahin isi hatiku sama kamu. Aku nggak tau gimana lagi. Nggak ada tempat buat aku curhat tentang posisi kita. Aku nggak tau lagi harus bagaimana.</p>
+        <p>Aku cuma bisa lihat kamu berproses, dan melihat itu sebenarnya bikin aku bahagia. Dan aku masih sayang sama kamu.</p>
+        <p>Aku nggak bermaksud mengungkit ini lagi, karena aku tahu semuanya sudah terjadi. Tapi aku masih punya rasa sama kamu, dan menurutku hal itu wajar. Orang yang sudah menyukai sesuatu pasti nggak bisa begitu saja menghilangkan semua perasaannya.</p>
+        <p>Jadi aku kasih hidden game ini sebagai kesempatan dan tempat untuk aku memberi tahu kamu bagaimana keadaanku sekarang. Aku masih baik-baik saja. Cuma ya... hati aku ini rasanya nggak bisa ngapa-ngapain lagi hehehe.</p>
+        <p>Aku berharap suatu saat nanti, kalau memang ada kesempatan, kita bisa memperbaiki semuanya dengan pikiran yang lebih dewasa dan bisa memutuskan sesuatu dengan lebih matang ke depannya.</p>
+        <p>Dan semoga di ulang tahunmu yang ke-19 ini, apa pun yang kamu inginkan bisa segera terkabul. Semoga kesehatanmu juga selalu terjaga dengan baik.</p>
       </div>
 
+      <!-- INTERAKSI PESAN RAHASIA -->
+      <div class="secret-message-section" id="secretMessageSection">
+        <div class="secret-prompt">
+          <h3>Kalau kamu sudah selesai membaca...</h3>
+          <p>Tolong tinggalkan pesan di bawah ini buat aku, apa pun pesan yang kau tinggal, aku hargai semuanya.</p>
+        </div>
+
+        <!-- FORM INPUT PESAN -->
+        <form id="secretForm" class="secret-form">
+          <textarea id="secretInput" maxlength="1000" placeholder="Tulis sesuatu di sini..."></textarea>
+          <div class="secret-form-footer">
+            <span id="charCounter" class="char-counter">0 / 1000</span>
+            <button type="submit" id="btnSubmitSecret" class="btn btn-primary">Kirim Pesan</button>
+          </div>
+          <p id="formStatus" class="form-status" role="status"></p>
+        </form>
+
+        <!-- CONTAINER PESAN TERBACA/TERSIMPANI (REPLACE FORM) -->
+        <div id="savedMessageDisplay" class="saved-message-display" hidden>
+          <div class="message-card">
+            <p id="savedMessageText" class="message-text"></p>
+          </div>
+          <p class="saved-status-note">Pesanmu sudah sampai.</p>
+        </div>
+      </div>
     </div>
   </section>
 
-  <!-- ---------- SLIDE 2 — PENCAPAIAN ---------- -->
-  <section class="slide" id="slide2" data-slide="2">
-    <div class="slide-inner slide2-inner">
-
-      <h2 class="slide-title">Lihat sejauh apa kamu sudah melangkah.</h2>
-
-      <div class="journey-tag">
-        <span>Perjuangan</span>
-        <span class="journey-arrow">→</span>
-        <span>Kesempatan</span>
-        <span class="journey-arrow">→</span>
-        <span>Pertumbuhan</span>
-      </div>
-
-      <div class="achievements">
-
-        <article class="achievement-card" data-reveal>
-          <span class="achievement-number">01</span>
-          <p class="achievement-label">Lolos ke PTN Impian</p>
-          <h3 class="achievement-title">Diterima di Universitas Hasanuddin</h3>
-          <p class="achievement-desc">Masuk ke salah satu perguruan tinggi negeri ternama nggak datang begitu saja. Itu hasil dari usaha yang dijalani diam-diam, jauh sebelum pengumuman keluar.</p>
-        </article>
-
-        <article class="achievement-card" data-reveal>
-          <span class="achievement-number">02</span>
-          <p class="achievement-label">Mendapat Beasiswa KIP</p>
-          <h3 class="achievement-title">Dipercaya lewat Beasiswa KIP</h3>
-          <p class="achievement-desc">Kesempatan ini bukti bahwa kerja keras dan kemampuan Serina memang layak mendapat ruang untuk terus berkembang.</p>
-        </article>
-
-        <article class="achievement-card" data-reveal>
-          <span class="achievement-number">03</span>
-          <p class="achievement-label">Bertumbuh di Lingkungan Baru</p>
-          <h3 class="achievement-title">Beradaptasi sebagai Mahasiswa</h3>
-          <p class="achievement-desc">Masuk dunia kuliah, ketemu orang-orang baru, dan mulai membangun hidup sendiri jauh dari zona nyaman. Kelihatannya sederhana, tapi ini salah satu pencapaian paling penting.</p>
-        </article>
-
-      </div>
-
-      <div class="slide-nav-buttons">
-        <button type="button" class="btn btn-ghost" data-prev>← Sebelumnya</button>
-        <button type="button" class="btn btn-outline" data-next>Lanjut →</button>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- ---------- SLIDE 3 — DOA ---------- -->
-  <section class="slide slide-dark" id="slide3" data-slide="3">
-    <div class="slide-inner slide3-inner">
-
-      <h2 class="slide-title slide-title-light">Untuk langkahmu di umur 19…</h2>
-
-      <ul class="prayer-list" id="prayerList">
-        <li class="prayer-item">Semoga selalu diberi kesehatan, di tengah jadwal kuliah yang kadang nggak kenal ampun.</li>
-        <li class="prayer-item">Semoga dimudahkan dalam setiap urusan kuliah, dari tugas kecil sampai keputusan besar.</li>
-        <li class="prayer-item">Semoga diberi kelancaran setiap kali menghadapi masalah, dan nggak harus menanggungnya sendirian.</li>
-        <li class="prayer-item">Semoga dipertemukan dengan orang-orang baik, yang tetap tinggal bukan cuma waktu senang.</li>
-        <li class="prayer-item">Semoga diberi kekuatan setiap kali gagal, dan cukup keberanian untuk coba lagi.</li>
-        <li class="prayer-item">Semoga tetap rendah hati ketika berhasil, seperti yang selama ini kamu tunjukkan.</li>
-        <li class="prayer-item">Semoga bisa menikmati prosesnya, bukan cuma mengejar hasilnya.</li>
-        <li class="prayer-item">Semoga cita-cita yang kamu simpan pelan-pelan menemukan jalannya.</li>
-        <li class="prayer-item">Dan semoga, sesibuk apa pun nanti, kamu tetap jadi Serina yang sama.</li>
-      </ul>
-
-      <p class="prayer-closing" id="prayerClosing">Semoga umur 19 bukan hanya tentang menjadi lebih dewasa, tapi juga tentang menjadi lebih kuat, lebih bahagia, dan lebih dekat dengan semua hal yang kamu impikan.</p>
-
-      <div class="slide-nav-buttons">
-        <button type="button" class="btn btn-ghost btn-ghost-light" data-prev>← Sebelumnya</button>
-        <button type="button" class="btn btn-outline btn-outline-light next-btn" data-next>Masih ada satu pesan lagi →</button>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- ---------- SLIDE 4 — PESAN TERAKHIR ---------- -->
-  <section class="slide slide-dark" id="slide4" data-slide="4">
-    <div class="slide-inner slide4-inner">
-
-      <h2 class="final-title">Dan kalau suatu hari kamu merasa sendirian…</h2>
-
-      <div class="final-message">
-        <p>Aku mungkin nggak selalu tahu apa yang lagi kamu pikirkan. Nggak selalu bisa bantu menyelesaikan semuanya. Bahkan mungkin nggak selalu ada di setiap momen. Tapi ada satu hal yang aku mau kamu tahu: aku tetap mendukungmu.</p>
-        <p>Waktu kamu berhasil, aku ikut senang. Waktu kamu menghadapi masalah, aku tetap di sini. Dan waktu kamu merasa gagal, kamu nggak harus menghadapinya sendirian.</p>
-        <p class="final-quote">Aku ada di belakangmu, mendukungmu, tanpa harus selalu berada di depanmu.</p>
-      </div>
-
-      <div class="final-closing">
-        <p class="final-closing-main">Selamat ulang tahun ke-19, Serina Rahmadani.</p>
-        <p class="final-closing-sub">Teruslah melangkah. Aku akan tetap jadi salah satu orang yang diam-diam ikut bangga melihatmu tumbuh.</p>
-        <p class="final-signature">— Marllyan Haria Yoangga</p>
-      </div>
-
-      <button type="button" class="btn btn-ghost btn-ghost-light" data-prev>← Sebelumnya</button>
-
-    </div>
-  </section>
-
-  <!-- dot navigation, fixed di bawah -->
-  <nav class="dot-nav" id="dotNav" aria-label="Navigasi slide">
-    <button type="button" class="dot active" data-goto="1" aria-label="Ke slide 1"></button>
-    <button type="button" class="dot" data-goto="2" aria-label="Ke slide 2"></button>
-    <button type="button" class="dot" data-goto="3" aria-label="Ke slide 3"></button>
-    <button type="button" class="dot" data-goto="4" aria-label="Ke slide 4"></button>
-  </nav>
-
-</main>
-
-<script src="script.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
