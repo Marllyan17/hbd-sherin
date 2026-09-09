@@ -9,16 +9,20 @@ const SUPABASE_URL = "https://supabase.com/dashboard/project/bfiauhohztjnncserzy
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJmaWF1aG9oenRqbm5jc2Vyenl0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg5NTU4MDIsImV4cCI6MjEwNDUzMTgwMn0.cpsRxbECqCXsPI1eqDkXAkUAf9WMtBDy-uWGkwX40Yc";
 
 let supabase = null;
-if (typeof window.supabase !== "undefined" && SUPABASE_URL !== "YOUR_SUPABASE_URL") {
-  supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+try {
+  if (typeof window.supabase !== "undefined" && SUPABASE_URL && SUPABASE_ANON_KEY) {
+    supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  }
+} catch (e) {
+  console.log("Supabase init deferred:", e);
 }
 
 document.addEventListener("DOMContentLoaded", () => {
   /* ============================================================
      1. PIN CONFIGURATION & LOCK LOGIC
      ============================================================ */
-  const MAIN_PINS = ["100907", "100907"]; // 10-09-07 / 100907
-  const SECRET_PINS = ["070405", "070405"]; // 07-04-05 / 070405
+  const MAIN_PINS = ["100907", "100907"];
+  const SECRET_PINS = ["070405", "070405"];
 
   const pinScreen = document.getElementById("pinScreen");
   const pinCard = document.getElementById("pinCard");
